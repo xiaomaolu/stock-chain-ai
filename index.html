@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stock Chain AI</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">SC</div>
+          <div>
+            <h1>Stock Chain AI</h1>
+            <p data-i18n="brandSubtitle">US stock AI trading assistant</p>
+          </div>
+        </div>
+
+        <div class="language-toggle" role="group" aria-label="Language">
+          <button class="lang-option active" type="button" data-lang="en">EN</button>
+          <button class="lang-option" type="button" data-lang="zh">中文</button>
+        </div>
+
+        <section class="control-card">
+          <span class="label" data-i18n="narrative">Market theme</span>
+          <label>
+            <span data-i18n="productSearch">Product search</span>
+            <input id="productSearch" list="productList" type="search" placeholder="NVDA / Nvidia / 英伟达..." />
+            <datalist id="productList"></datalist>
+          </label>
+          <div class="quick-loads">
+            <button type="button" data-quick-symbol="NVDA"><span>NVDA</span><small>demo</small></button>
+            <button type="button" data-quick-symbol="BTCUSDT"><span>BTCUSDT</span><small>live</small></button>
+          </div>
+          <div id="productInsight" class="product-insight"></div>
+          <label>
+            <span data-i18n="theme">Theme</span>
+            <select id="narrativeSelect">
+              <option value="aiCapex">AI Capex</option>
+              <option value="glp1">GLP-1</option>
+              <option value="rateCut">Rate Cut</option>
+              <option value="defense">Defense Spending</option>
+            </select>
+          </label>
+          <label>
+            <span data-i18n="agentStyle">Agent style</span>
+            <select id="styleSelect">
+              <option value="balanced" data-i18n="balanced">Balanced</option>
+              <option value="contrarian" data-i18n="contrarian">Contrarian</option>
+              <option value="momentum" data-i18n="momentum">Momentum</option>
+            </select>
+          </label>
+          <label>
+            <span data-i18n="grossExposure">Gross exposure</span>
+            <div class="slider-row">
+              <input id="riskSlider" type="range" min="5" max="30" step="1" value="16" />
+              <strong id="riskValue">16%</strong>
+            </div>
+          </label>
+        </section>
+
+        <div class="actions">
+          <button id="scanBtn" class="primary" data-i18n="scanNarrative">Analyze</button>
+          <button id="deployBtn" class="secondary" data-i18n="deployBasket">Start paper trade</button>
+          <button id="resetBtn" class="ghost" data-i18n="reset">Reset</button>
+        </div>
+
+        <section class="note-card">
+          <span class="label" data-i18n="demoBoundary">Demo boundary</span>
+          <p data-i18n="demoBoundaryBody">BTCUSDT/ETHUSDT can use live Bitget data. US-stock chain analysis is a demo unless Bitget lists that symbol.</p>
+        </section>
+      </aside>
+
+      <main class="workspace">
+        <header class="hero">
+          <div class="hero-main">
+            <p class="eyebrow" data-i18n="heroEyebrow">US Stock AI Trading</p>
+            <h2 data-i18n="heroTitle">Find where a market story is early, crowded, fading, or mispriced.</h2>
+            <p class="hero-subtitle" data-i18n="heroSubtitle">Search a stock, see its industry chain, check price action, and get a simple AI trading idea.</p>
+            <div id="modeBanner" class="mode-banner"></div>
+            <div class="flow-strip">
+              <div><b>1</b><span data-i18n="flowSearch">Search stock</span></div>
+              <div><b>2</b><span data-i18n="flowChain">Map chain</span></div>
+              <div><b>3</b><span data-i18n="flowOpportunity">Get AI setup</span></div>
+            </div>
+            <div class="status-strip">
+              <div><span data-i18n="stage">Stage</span><strong id="stageStatus">Unscanned</strong></div>
+              <div><span data-i18n="pricedIn">Heat level</span><strong id="pricedInStatus">--</strong></div>
+              <div><span data-i18n="basketPnl">Paper PnL</span><strong id="sessionPnl">$0.00</strong></div>
+            </div>
+          </div>
+          <aside id="stockBrief" class="stock-brief"></aside>
+        </header>
+
+        <section class="market-grid">
+          <article class="panel chart-panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow" data-i18n="narrativePropagation">Industry Chain</p>
+                <h3 id="narrativeTitle">AI Capex</h3>
+                <p id="mapSummary" class="map-summary"></p>
+              </div>
+              <div class="price-block">
+                <small id="narrativeBadge">Expanding</small>
+                <span id="narrativeScore">72</span>
+                <strong id="narrativeChange">+ theme strength</strong>
+              </div>
+            </div>
+            <div id="propagationMap" class="propagation-map"></div>
+            <div id="chainColumns" class="chain-columns"></div>
+            <div class="kline-shell">
+              <div class="kline-top">
+                <div>
+                  <p class="eyebrow" data-i18n="priceChart">Price chart</p>
+                  <h4 id="chartTitle">--</h4>
+                </div>
+                <div class="timeframe-tabs" role="group" aria-label="Chart timeframe">
+                  <button class="active" type="button" data-timeframe="15m">15m</button>
+                  <button type="button" data-timeframe="1h">1h</button>
+                  <button type="button" data-timeframe="4h">4h</button>
+                  <button type="button" data-timeframe="1d">1D</button>
+                </div>
+              </div>
+              <div class="chart-readout">
+                <div><span data-i18n="lastPrice">Last price</span><strong id="chartLastPrice">--</strong></div>
+                <div><span data-i18n="chartChange">Move</span><strong id="chartMove">--</strong></div>
+                <div><span data-i18n="supportLevel">Support</span><strong id="supportLevel">--</strong></div>
+                <div><span data-i18n="resistanceLevel">Resistance</span><strong id="resistanceLevel">--</strong></div>
+              </div>
+              <div class="chart-canvas-wrap">
+                <canvas id="priceChart" width="900" height="360"></canvas>
+              </div>
+              <div class="chart-note">
+                <span id="chartSourceBadge">Demo</span>
+                <p id="chartComment">Search a product to load its price chart.</p>
+              </div>
+            </div>
+            <div class="market-stats">
+              <div><span data-i18n="coreHeat">Core heat</span><strong id="coreHeat">--</strong></div>
+              <div><span data-i18n="laggardGap">Laggard gap</span><strong id="laggardGap">--</strong></div>
+              <div><span data-i18n="crowding">Crowding</span><strong id="crowdingScore">--</strong></div>
+              <div><span data-i18n="breakTrigger">Break trigger</span><strong id="breakTrigger">--</strong></div>
+            </div>
+          </article>
+
+          <article class="panel plan-panel">
+            <div class="panel-header compact">
+              <div>
+                <p class="eyebrow" data-i18n="relativeBasket">AI Strategy</p>
+                <h3 id="planTitle">Stand by</h3>
+              </div>
+              <span class="badge" id="planBadge">Waiting</span>
+            </div>
+            <div id="agentDecision" class="agent-decision"></div>
+            <div id="opportunityCard" class="opportunity-card"></div>
+            <div id="evidenceCard" class="evidence-card"></div>
+            <div class="basket-list" id="basketList"></div>
+            <div class="thesis-box">
+              <span data-i18n="arbitrageThesis">Plain idea</span>
+              <p id="tradeThesis">Click Analyze to get a simple trade idea.</p>
+            </div>
+          </article>
+        </section>
+
+        <details class="advanced-details">
+          <summary>
+            <span data-i18n="advancedDetails">Advanced details</span>
+            <small data-i18n="advancedDetailsHint">Agent notes, risks, replay and what-if checks</small>
+          </summary>
+
+          <section class="agent-grid advanced-section">
+            <article class="panel">
+              <div class="panel-header compact">
+                <div>
+                  <p class="eyebrow" data-i18n="narrativeAgents">Analysis Team</p>
+                  <h3 data-i18n="specialistDebate">Specialist debate</h3>
+                </div>
+                <span class="badge" id="committeeBadge">--</span>
+              </div>
+              <div id="agentVotes" class="agent-votes"></div>
+            </article>
+
+            <article class="panel position-panel">
+              <div class="panel-header compact">
+                <div>
+                  <p class="eyebrow" data-i18n="livePaperBasket">Paper Trade</p>
+                  <h3 id="positionTitle">No paper trade yet</h3>
+                </div>
+                <span class="badge" id="positionBadge">Flat</span>
+              </div>
+              <div id="positionBoard" class="position-board"></div>
+            </article>
+          </section>
+
+          <section class="signal-grid advanced-section">
+            <article class="panel catalyst-panel">
+              <div class="panel-header compact">
+                <div>
+                  <p class="eyebrow" data-i18n="catalystFeed">Catalyst Feed</p>
+                  <h3 data-i18n="eventInputs">Event inputs</h3>
+                </div>
+                <span class="badge" id="feedBadge">3 inputs</span>
+              </div>
+              <div id="catalystFeed" class="catalyst-feed"></div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-header compact">
+                <div>
+                  <p class="eyebrow" data-i18n="whyNow">Why Now</p>
+                  <h3 data-i18n="tradeBrief">Trade brief</h3>
+                </div>
+                <span class="badge" id="convictionBadge">--</span>
+              </div>
+              <div id="tradeBrief" class="trade-brief"></div>
+            </article>
+          </section>
+
+          <section class="replay-grid advanced-section">
+            <article class="panel">
+              <div class="panel-header compact">
+                <div>
+                  <p class="eyebrow" data-i18n="replayMode">Replay Mode</p>
+                  <h3 data-i18n="narrativeLifecycle">Theme timeline</h3>
+                </div>
+                <span class="badge" id="replayBadge">T+0</span>
+              </div>
+              <div id="replayTrack" class="replay-track"></div>
+            </article>
+          </section>
+
+          <section class="event-grid advanced-section">
+            <article class="panel">
+              <div class="panel-header compact">
+                <div>
+                  <p class="eyebrow" data-i18n="pricedInMeter">Heat Check</p>
+                  <h3 data-i18n="earlyVsCrowded">Early vs crowded</h3>
+                </div>
+              </div>
+              <div id="eventRadar" class="event-radar"></div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-header compact">
+                <div>
+                  <p class="eyebrow" data-i18n="breaksStory">What Breaks The Story</p>
+                  <h3 data-i18n="invalidationMap">Invalidation map</h3>
+                </div>
+              </div>
+              <div id="invalidationList" class="invalidation-list"></div>
+            </article>
+          </section>
+
+          <section class="bottom-grid advanced-section">
+            <article class="panel">
+              <div class="panel-header compact">
+                <div>
+                  <p class="eyebrow" data-i18n="shockLab">What-if Lab</p>
+                  <h3 data-i18n="repriceStory">Reprice the story</h3>
+                </div>
+              </div>
+              <div class="shock-controls">
+                <label><span data-i18n="coreMiss">Core miss</span><input id="guidanceShock" type="range" min="-5" max="5" step="1" value="1" /></label>
+                <label><span data-i18n="macroDrag">Macro drag</span><input id="rateShock" type="range" min="-3" max="3" step="1" value="0" /></label>
+                <label><span data-i18n="crowdingUnwind">Crowding unwind</span><input id="ivCrush" type="range" min="0" max="8" step="1" value="3" /></label>
+              </div>
+              <div id="scenarioResult" class="scenario-result"></div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-header compact">
+                <div>
+                  <p class="eyebrow" data-i18n="agentMemory">Agent Memory</p>
+                  <h3 data-i18n="decisionTimeline">Decision timeline</h3>
+                </div>
+              </div>
+              <ol id="decisionLog" class="decision-log">
+                <li><span data-i18n="ready">Ready</span><p data-i18n="waitingScan">Agent is waiting for an analysis.</p></li>
+              </ol>
+            </article>
+          </section>
+        </details>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
