@@ -116,9 +116,11 @@ const state = {
   timeframe: "1h",
   candles: {},
   bitgetSymbols: null,
+  tradeLog: [],
 };
 
 const $ = (id) => document.getElementById(id);
+const PAPER_STARTING_BALANCE = 100000;
 
 const productProfiles = {
   NVDA: { en: "Nvidia: AI chip leader powering data centers.", zh: "英伟达：AI 芯片龙头，主要受益于数据中心建设。" },
@@ -276,6 +278,15 @@ const translations = {
     evidenceBitgetData: "Bitget public ticker + candles",
     evidenceCandidate: "AI candidate",
     evidenceUpdated: "Updated",
+    evidenceAccount: "Account",
+    evidenceTradeLog: "Audit log",
+    evidenceExport: "Download JSON",
+    evidenceLogEmpty: "No audit records yet.",
+    evidenceBalanceBefore: "Before",
+    evidenceBalanceAfter: "After",
+    evidenceBalanceChange: "Change",
+    evidenceNotional: "Notional",
+    evidenceQuantity: "Qty",
     actionWatchLong: "Watch long",
     actionWatchShort: "Watch weak side",
     actionWait: "Wait",
@@ -564,6 +575,15 @@ const translations = {
     evidenceBitgetData: "Bitget 公开 ticker + K 线",
     evidenceCandidate: "AI 候选标的",
     evidenceUpdated: "更新时间",
+    evidenceAccount: "账户",
+    evidenceTradeLog: "审计日志",
+    evidenceExport: "下载 JSON",
+    evidenceLogEmpty: "还没有审计记录。",
+    evidenceBalanceBefore: "交易前",
+    evidenceBalanceAfter: "交易后",
+    evidenceBalanceChange: "变化",
+    evidenceNotional: "名义金额",
+    evidenceQuantity: "数量",
     actionWatchLong: "观察做多",
     actionWatchShort: "观察偏弱",
     actionWait: "先观望",
@@ -1147,6 +1167,61 @@ function log(title, body) {
   $("decisionLog").prepend(li);
 }
 
+function roundNumber(value, digits = 6) {
+  return Number(Number(value || 0).toFixed(digits));
+}
+
+function paperBalance() {
+  return PAPER_STARTING_BALANCE + (state.pnl || 0);
+}
+
+function tradeDataSource(ticker) {
+  const market = marketSnapshot(ticker);
+  return market?.source === "bitget" ? `bitget:${market.symbol}` : "demo:us-stock-chain";
+}
+
+function createTradeRecord({ action, leg, sessionId, balanceBefore, balanceAfter }) {
+  const balanceChange = balanceAfter - balanceBefore;
+  return {
+    timestamp: new Date().toISOString(),
+    sessionId,
+    strategy: currentNarrative().title,
+    action,
+    symbol: leg.ticker,
+    tradingPair: leg.ticker,
+    direction: leg.side,
+    price: roundNumber(action === "MARK" ? leg.mark : leg.entry, 4),
+    quantity: roundNumber(leg.quantity),
+    notional: roundNumber(leg.notional, 2),
+    accountBalanceBefore: roundNumber(balanceBefore, 2),
+    accountBalanceAfter: roundNumber(balanceAfter, 2),
+    accountBalanceChange: roundNumber(balanceChange, 2),
+    paperPnl: roundNumber(leg.pnl || 0, 2),
+    dataSource: tradeDataSource(leg.ticker),
+  };
+}
+
+function appendTradeRecords(records) {
+  state.tradeLog = [...records, ...state.tradeLog].slice(0, 60);
+}
+
+function downloadTradeLog() {
+  const payload = {
+    generatedAt: new Date().toISOString(),
+    accountCurrency: "USD",
+    startingBalance: PAPER_STARTING_BALANCE,
+    currentBalance: roundNumber(paperBalance(), 2),
+    records: state.tradeLog,
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "stock-chain-ai-paper-trading-log.json";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
 function computeScan() {
   const narrative = currentNarrative();
   const styleBoost = state.style === "momentum" ? 7 : state.style === "contrarian" ? -5 : 0;
@@ -1167,10 +1242,14 @@ function buildBasket(scan) {
     const side = contrarianFlip ? (node.side === "LONG" ? "SHORT" : "LONG") : node.side;
     const absWeight = Math.abs(node.weight) * crowdingPenalty;
     const allocation = (absWeight / 16) * gross;
+    const notional = PAPER_STARTING_BALANCE * (allocation / 100);
+    const quantity = node.price > 0 ? notional / node.price : 0;
     return {
       ...node,
       side,
       allocation: Number(allocation.toFixed(2)),
+      notional: Number(notional.toFixed(2)),
+      quantity: roundNumber(quantity),
       mark: node.price,
       entry: node.price,
       pnl: 0,
@@ -1644,6 +1723,8 @@ function renderEvidence() {
   const simText = hasPosition
     ? `${currentNarrative().title} · ${state.position.legs.length} ${state.lang === "zh" ? "个标的" : "legs"}`
     : t("evidenceNoTradeBody");
+  const accountBalance = paperBalance();
+  const latestRecords = state.tradeLog.slice(0, 5);
   $("evidenceCard").innerHTML = `
     <div class="evidence-head">
       <div>
@@ -1673,7 +1754,31 @@ function renderEvidence() {
         <b class="${state.pnl >= 0 ? "positive" : "negative"}">${money(state.pnl || 0)}</b>
         <small>${t("evidenceUpdated")} ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</small>
       </div>
+      <div>
+        <span>${t("evidenceAccount")}</span>
+        <b>${money(accountBalance)}</b>
+        <small>${t("evidenceBalanceChange")} ${money(accountBalance - PAPER_STARTING_BALANCE)}</small>
+      </div>
     </div>
+    <section class="evidence-log">
+      <div class="evidence-log-head">
+        <strong>${t("evidenceTradeLog")}</strong>
+        <button type="button" data-export-trade-log ${state.tradeLog.length ? "" : "disabled"}>${t("evidenceExport")}</button>
+      </div>
+      ${
+        latestRecords.length
+          ? latestRecords
+              .map((record) => `
+                <article>
+                  <span>${record.timestamp}</span>
+                  <b>${record.action} ${record.direction} ${record.symbol}</b>
+                  <small>${money(record.price)} · ${t("evidenceQuantity")} ${record.quantity} · ${t("evidenceBalanceChange")} ${money(record.accountBalanceChange)}</small>
+                </article>
+              `)
+              .join("")
+          : `<p>${t("evidenceLogEmpty")}</p>`
+      }
+    </section>
   `;
 }
 
@@ -1821,6 +1926,7 @@ function renderReplay() {
       if (state.position?.open) {
         state.position.legs = state.basket.map((item) => ({ ...item }));
         state.pnl = 0;
+        state.tradeLog = [];
         $("sessionPnl").textContent = money(0);
         $("sessionPnl").className = "";
       }
@@ -1863,10 +1969,22 @@ function scanNarrative() {
 
 function deployBasket() {
   if (!state.basket.length) scanNarrative();
+  const sessionId = `paper-${Date.now()}`;
+  const balanceBefore = paperBalance();
   state.position = {
     open: true,
+    sessionId,
+    openedAt: new Date().toISOString(),
+    startingBalance: balanceBefore,
     legs: state.basket.map((item) => ({ ...item })),
   };
+  appendTradeRecords(state.position.legs.map((leg) => createTradeRecord({
+    action: "OPEN",
+    leg,
+    sessionId,
+    balanceBefore,
+    balanceAfter: balanceBefore,
+  })));
   renderPosition();
   log(t("paperBasketDeployed"), t("paperBasketDeployedBody", { title: currentNarrative().title }));
 }
@@ -1881,13 +1999,25 @@ function legMove(leg, index) {
 
 function updatePosition() {
   if (!state.position?.open) return;
+  const balanceBefore = paperBalance();
   let total = 0;
   state.position.legs.forEach((leg, index) => {
     leg.mark *= 1 + legMove(leg, index);
-    leg.pnl = (leg.side === "LONG" ? leg.mark - leg.entry : leg.entry - leg.mark) * leg.allocation * 12;
+    leg.pnl = (leg.side === "LONG" ? leg.mark - leg.entry : leg.entry - leg.mark) * leg.quantity;
     total += leg.pnl;
   });
   state.pnl = total;
+  const balanceAfter = paperBalance();
+  const leader = [...state.position.legs].sort((a, b) => Math.abs(b.pnl) - Math.abs(a.pnl))[0];
+  if (leader) {
+    appendTradeRecords([createTradeRecord({
+      action: "MARK",
+      leg: leader,
+      sessionId: state.position.sessionId,
+      balanceBefore,
+      balanceAfter,
+    })]);
+  }
   $("sessionPnl").textContent = money(total);
   $("sessionPnl").className = total >= 0 ? "positive" : "negative";
   renderPosition();
@@ -1970,6 +2100,7 @@ function reset() {
   state.position = null;
   state.customSymbol = null;
   state.pnl = 0;
+  state.tradeLog = [];
   state.replayIndex = 2;
   $("sessionPnl").textContent = "$0.00";
   $("sessionPnl").className = "";
@@ -2034,6 +2165,7 @@ $("narrativeSelect").addEventListener("change", (event) => {
   state.basket = buildBasket(state.scan);
   state.position = null;
   state.pnl = 0;
+  state.tradeLog = [];
   $("productSearch").value = state.selectedProduct || "";
   $("sessionPnl").textContent = "$0.00";
   $("sessionPnl").className = "";
@@ -2127,6 +2259,7 @@ $("productSearch").addEventListener("input", async (event) => {
     state.basket = [];
     state.position = null;
     state.pnl = 0;
+    state.tradeLog = [];
     state.replayIndex = 2;
     $("sessionPnl").textContent = "$0.00";
     $("sessionPnl").className = "";
@@ -2167,6 +2300,11 @@ document.addEventListener("click", (event) => {
   if (!picker) return;
   $("productSearch").value = picker.dataset.pickTicker;
   $("productSearch").dispatchEvent(new Event("input", { bubbles: true }));
+});
+document.addEventListener("click", (event) => {
+  const exporter = event.target.closest("[data-export-trade-log]");
+  if (!exporter || exporter.disabled) return;
+  downloadTradeLog();
 });
 document.querySelectorAll("[data-timeframe]").forEach((button) => {
   button.addEventListener("click", () => {
