@@ -192,8 +192,8 @@ const translations = {
     demoBoundary: "Demo boundary",
     demoBoundaryBody: "BTCUSDT/ETHUSDT can use live Bitget data. US-stock chain analysis is a demo unless Bitget lists that symbol.",
     heroEyebrow: "US Stock AI Trading",
-    heroTitle: "Find overlooked opportunities in a stock chain.",
-    heroSubtitle: "Search a stock, see its industry chain, check price action, and get a simple AI trading idea.",
+    heroTitle: "Stock-chain signal board.",
+    heroSubtitle: "",
     productSearch: "Product search",
     productPrompt: "Try NVDA, Nvidia, 英伟达, or BTCUSDT / ETHUSDT for real Bitget data.",
     liveData: "Market data",
@@ -208,11 +208,11 @@ const translations = {
     advancedDetails: "Advanced details",
     advancedDetailsHint: "Agent notes, risks, replay and what-if checks",
     modeDemoTitle: "US-stock chain demo",
-    modeDemoBody: "AI maps the stock, suppliers, related names, and overlooked catch-up ideas. US-stock price/K-line is demo when Bitget has no matching symbol.",
-    modeLiveTitle: "Bitget live market mode",
-    modeLiveBody: "This view uses Bitget public ticker and candle data for the selected spot symbol.",
-    modeEmptyTitle: "Choose a market",
-    modeEmptyBody: "Use NVDA for the US-stock chain demo, or BTCUSDT / ETHUSDT for live Bitget data.",
+    modeDemoBody: "Chain demo",
+    modeLiveTitle: "Bitget live",
+    modeLiveBody: "Ticker + candles",
+    modeEmptyTitle: "Choose market",
+    modeEmptyBody: "NVDA / BTCUSDT",
     flowSearch: "Search stock",
     flowChain: "Map chain",
     flowOpportunity: "Get AI setup",
@@ -314,7 +314,7 @@ const translations = {
     priceNearResistance: "Near resistance",
     priceMidRange: "Mid range",
     priceSignalBody: "{ticker} chart: {signal}. Support {support}, resistance {resistance}.",
-    customOpportunity: "This is a real Bitget market-data view. Use it to verify price and K-line plumbing; US-stock theme opportunity appears on NVDA / LLY / QQQ demos.",
+    customOpportunity: "Live market view",
     decisionLong: "Watch long",
     decisionShort: "Use as hedge",
     decisionNeutral: "Wait",
@@ -333,7 +333,7 @@ const translations = {
     standBy: "Stand by",
     waiting: "Waiting",
     arbitrageThesis: "Plain-English idea",
-    thesisEmpty: "Click Analyze to get a simple trade idea.",
+    thesisEmpty: "Awaiting scan.",
     narrativeAgents: "Agent team",
     specialistDebate: "Team view",
     livePaperBasket: "Paper trade",
@@ -350,7 +350,7 @@ const translations = {
     agentMemory: "Agent Memory",
     decisionTimeline: "Decision timeline",
     ready: "Ready",
-    waitingScan: "Search a stock, then click Analyze.",
+    waitingScan: "Awaiting scan.",
     unscanned: "Unscanned",
     crowdedRisk: "- crowded risk",
     narrativeImpulse: "+ theme strength",
@@ -389,7 +389,7 @@ const translations = {
     laggardFailure: "Laggard failure",
     laggardFailureBody: "If related stocks fail to follow, keep only leaders or stop the paper trade.",
     planTitle: "{stage} setup",
-    planThesis: "{title} is {stage}. AI looks for suppliers or smaller names that have not fully followed the leader yet.",
+    planThesis: "{title} · {stage}",
     scanComplete: "Analysis complete",
     scanCompleteBody: "{title} marked {stage}; paper trade generated with {crowding}/100 heat risk.",
     paperBasketDeployed: "Paper trade started",
@@ -489,8 +489,8 @@ const translations = {
     demoBoundary: "Demo 边界",
     demoBoundaryBody: "BTCUSDT/ETHUSDT 可走 Bitget 实时数据；美股产业链分析默认是 demo，除非 Bitget 收录该交易对。",
     heroEyebrow: "美股 AI 交易",
-    heroTitle: "从产业链里找被忽略的机会。",
-    heroSubtitle: "输入股票，查看行情、上下游、相关股票，并获得一个直观的 AI 交易建议。",
+    heroTitle: "产业链信号面板。",
+    heroSubtitle: "",
     productSearch: "产品搜索",
     productPrompt: "可输入 NVDA / Nvidia / 英伟达；真实 Bitget 行情可试 BTCUSDT / ETHUSDT。",
     liveData: "行情数据",
@@ -505,11 +505,11 @@ const translations = {
     advancedDetails: "更多细节",
     advancedDetailsHint: "AI 观点、风险、回放和假设测试",
     modeDemoTitle: "美股产业链 Demo",
-    modeDemoBody: "AI 识别股票、上下游、相关标的，并寻找可能被忽略的补涨机会；Bitget 没有匹配交易对时，美股价格/K线为演示。",
-    modeLiveTitle: "Bitget 实时行情模式",
-    modeLiveBody: "当前视图使用 Bitget 公开 ticker 和 K 线数据。",
-    modeEmptyTitle: "选择一个市场",
-    modeEmptyBody: "输入 NVDA 看美股产业链 demo；输入 BTCUSDT / ETHUSDT 看 Bitget 实时行情。",
+    modeDemoBody: "产业链演示",
+    modeLiveTitle: "Bitget 实时",
+    modeLiveBody: "Ticker + K线",
+    modeEmptyTitle: "选择市场",
+    modeEmptyBody: "NVDA / BTCUSDT",
     flowSearch: "搜索股票",
     flowChain: "查看产业链",
     flowOpportunity: "获得 AI 策略",
@@ -611,7 +611,7 @@ const translations = {
     priceNearResistance: "接近压力",
     priceMidRange: "区间中部",
     priceSignalBody: "{ticker} 图表：{signal}。支撑 {support}，压力 {resistance}。",
-    customOpportunity: "这是 Bitget 真实行情视图，用来验证价格和 K 线接入；美股产业链机会请用 NVDA / LLY / QQQ 这类 demo。",
+    customOpportunity: "实时行情视图",
     decisionLong: "关注做多",
     decisionShort: "作为对冲",
     decisionNeutral: "先观望",
@@ -630,7 +630,7 @@ const translations = {
     standBy: "待命",
     waiting: "等待",
     arbitrageThesis: "一句话策略",
-    thesisEmpty: "点击开始分析后，这里会给出一个简单交易想法。",
+    thesisEmpty: "等待扫描。",
     narrativeAgents: "分析小队",
     specialistDebate: "系统观点",
     livePaperBasket: "模拟交易",
@@ -647,7 +647,7 @@ const translations = {
     agentMemory: "AI 记录",
     decisionTimeline: "决策时间线",
     ready: "就绪",
-    waitingScan: "先选择或搜索一只股票，再点击分析。",
+    waitingScan: "等待扫描。",
     unscanned: "未扫描",
     crowdedRisk: "- 过热风险",
     narrativeImpulse: "+ 热点强度",
@@ -686,7 +686,7 @@ const translations = {
     laggardFailure: "补涨失败",
     laggardFailureBody: "如果相关股票没有跟上，就只观察龙头，或者停止模拟。",
     planTitle: "{stage}机会",
-    planThesis: "{title} 现在是{stage}状态。AI 会优先找还没完全跟涨的供应商、小票或相关标的。",
+    planThesis: "{title} · {stage}",
     scanComplete: "分析完成",
     scanCompleteBody: "{title} 当前是{stage}；已生成模拟交易，过热程度 {crowding}/100。",
     paperBasketDeployed: "模拟已开始",
@@ -1446,30 +1446,21 @@ function renderProductInsight() {
   const sourceLabel = market?.source === "bitget" ? t("bitgetLive") : t("demoFallback");
   const status = marketStatus(market);
   $("productInsight").innerHTML = `
-    <div>
-      <span>${t("supportedOnBitget")}</span>
-      <strong>${product.ticker} · ${displayPrice(productPrice(product))}</strong>
-      <p>${sourceLabel}${market?.source === "bitget" ? ` · ${t("bitgetSymbol")} ${market.symbol}` : ` · ${t("dataUnavailable")}`}</p>
-      <div class="data-status ${status.tone}">
-        <b>${status.label}</b>
-        <small>${status.detail}</small>
-      </div>
+    <div class="insight-ticker">
+      <strong>${product.ticker}</strong>
+      <b>${displayPrice(productPrice(product))}</b>
     </div>
-    <div>
-      <span>${t("matchedNarrative")}</span>
-      <p>${product.narrativeTitle} / ${product.role === "Bitget symbol" ? t("realSymbolLoaded") : roleLabel(product.role)}</p>
+    <div class="data-status ${status.tone}">
+      <b>${sourceLabel}</b>
+      <small>${market?.source === "bitget" ? market.symbol : status.label}</small>
     </div>
     ${
       product.role === "Bitget symbol"
-        ? `<div class="chain-row"><span>${t("dataQuality")}</span><p>${status.label} · ${status.detail}</p></div>`
+        ? `<div class="chain-row compact"><span>${t("dataQuality")}</span><b>${status.label}</b></div>`
         : `
-          <div class="chain-row">
-            <span>${t("upstream")}</span>
-            <p>${product.upstream.join(" · ")}</p>
-          </div>
-          <div class="chain-row">
-            <span>${t("downstream")}</span>
-            <p>${product.downstream.join(" · ") || "--"}</p>
+          <div class="mini-bars">
+            <div style="--value:${product.heat}"><span>Heat</span><i></i><b>${product.heat}</b></div>
+            <div style="--value:${clamp(Math.abs(product.lag) * 2, 0, 100)}"><span>Lag</span><i></i><b>${product.lag}</b></div>
           </div>
         `
     }
@@ -1489,7 +1480,8 @@ function renderStockBrief() {
   const sourceLabel = market?.source === "bitget" ? t("bitgetLive") : t("demoFallback");
   const status = marketStatus(market);
   const change = market?.change24h;
-  const takeawayKey = product.side === "SHORT" ? "takeawayShort" : "takeawayLong";
+  const scan = state.scan || computeScan();
+  const decision = decisionFor(product, scan);
   const related = product.role === "Bitget symbol"
     ? `<span>--</span>`
     : currentNarrative().nodes
@@ -1498,12 +1490,16 @@ function renderStockBrief() {
         .map((node) => `<button type="button" data-pick-ticker="${node.ticker}">${node.ticker}</button>`)
         .join("");
   $("stockBrief").innerHTML = `
-    <span>${t("stockBriefTitle")}</span>
-    <div class="stock-brief-head">
-      <strong>${product.ticker}</strong>
-      <em>${displayPrice(productPrice(product))}</em>
+    <div class="stock-visual-head">
+      <div class="signal-dial ${decision.tone}" style="--score:${decision.confidence}">
+        <b>${decision.confidence}</b>
+        <span>${t("confidence")}</span>
+      </div>
+      <div class="stock-brief-head">
+        <strong>${product.ticker}</strong>
+        <em>${displayPrice(productPrice(product))}</em>
+      </div>
     </div>
-    <p>${productDescription(product.ticker)}</p>
     <div class="market-source ${status.tone}">
       <b>${status.label}</b>
       <small>${market?.source === "bitget" ? `${market.symbol} · ${t("change24h")} ${displayPercent(change, 100)}` : status.detail}</small>
@@ -1512,9 +1508,12 @@ function renderStockBrief() {
       <div><small>${t("roleInTheme")}</small><b>${product.role === "Bitget symbol" ? t("realSymbolLoaded") : roleLabel(product.role)}</b></div>
       <div><small>${t("matchedNarrative")}</small><b>${product.narrativeTitle}</b></div>
     </div>
+    <div class="mini-bars">
+      <div style="--value:${product.heat}"><span>Heat</span><i></i><b>${product.heat}</b></div>
+      <div style="--value:${clamp(Math.abs(product.lag) * 2, 0, 100)}"><span>Lag</span><i></i><b>${product.lag}</b></div>
+      <div style="--value:${scan.crowding}"><span>Risk</span><i></i><b>${scan.crowding}</b></div>
+    </div>
     <div class="related-strip"><small>${t("relatedStocks")}</small><div>${related}</div></div>
-    <small>${t("simpleTakeaway")}</small>
-    <p>${t(takeawayKey)}</p>
   `;
 }
 
@@ -1536,10 +1535,10 @@ function renderAgentDecision() {
       <strong>${t(decision.key)}</strong>
       <em>${t("confidence")} ${decision.confidence}/100</em>
     </div>
-    <p>${t(decision.reason)}</p>
-    <div class="decision-plan">
-      <span>${t("executionPlan")}</span>
-      <p>${t("executionPlanBody")}</p>
+    <div class="decision-bars">
+      <div style="--value:${decision.confidence}"><span>${t("confidence")}</span><i></i><b>${decision.confidence}</b></div>
+      <div style="--value:${scan.impulse}"><span>${t("scoreTheme")}</span><i></i><b>${scan.impulse}</b></div>
+      <div style="--value:${100 - scan.crowding}"><span>${t("ticketRisk")}</span><i></i><b>${scan.crowding}</b></div>
     </div>
   `;
 }
@@ -1599,7 +1598,7 @@ function renderOpportunity() {
   if (product?.role === "Bitget symbol") {
     $("opportunityCard").innerHTML = `
       <span>${t("aiOpportunity")}</span>
-      <p>${t("customOpportunity")}</p>
+      <div class="empty-visual"><b>${product.ticker}</b><span>${t("customOpportunity")}</span></div>
     `;
     return;
   }
@@ -1607,7 +1606,7 @@ function renderOpportunity() {
   if (!opportunity) {
     $("opportunityCard").innerHTML = `
       <span>${t("aiOpportunity")}</span>
-      <p>${t("noOpportunityYet")}</p>
+      <div class="empty-visual"><b>--</b><span>${t("noOpportunityYet")}</span></div>
     `;
     return;
   }
@@ -1634,10 +1633,15 @@ function renderOpportunity() {
   ];
   $("opportunityCard").innerHTML = `
     <span>${t("aiOpportunity")}</span>
-    <button class="opportunity-target" type="button" data-pick-ticker="${opportunity.ticker}">${opportunity.ticker} · ${roleLabel(opportunity.role)}</button>
-    <em class="opportunity-mode ${opportunity.mode}">${t(isDownside ? "downsideMode" : "upsideMode")}</em>
+    <div class="opportunity-hero">
+      <button class="opportunity-target" type="button" data-pick-ticker="${opportunity.ticker}">${opportunity.ticker}</button>
+      <div class="signal-dial ${isDownside ? "short" : "long"}" style="--score:${ticketConfidence}">
+        <b>${ticketConfidence}</b>
+        <span>${t("ticketConfidence")}</span>
+      </div>
+      <em class="opportunity-mode ${opportunity.mode}">${t(isDownside ? "downsideMode" : "upsideMode")}</em>
+    </div>
     <section class="trade-ticket">
-      <small>${t("tradeTicket")}</small>
       <div>
         <span>${t("ticketAction")}</span>
         <b>${ticketAction}</b>
@@ -1671,7 +1675,7 @@ function renderOpportunity() {
         <b>${distanceToTrigger === null ? "--" : `${distanceToTrigger.toFixed(2)}%`}</b>
       </div>
     </section>
-    <section class="score-breakdown">
+    <section class="score-breakdown compact-score">
       <small>${t("scoreBreakdown")}</small>
       ${scoreRows
         .map(([label, value]) => `
@@ -1683,19 +1687,6 @@ function renderOpportunity() {
         `)
         .join("")}
     </section>
-    ${priceSignal ? `<div><small>${t("ticketPrice")}</small><p>${t("priceSignalBody", { ticker: opportunity.ticker, signal: t(priceSignal.key), support: priceSignal.support, resistance: priceSignal.resistance })}</p></div>` : ""}
-    <div>
-      <small>${t("setupReason")}</small>
-      <p>${isDownside ? t("downsideReason", { ticker: opportunity.ticker }) : t("opportunityReason", { ticker: opportunity.ticker, gap: opportunity.lag })}</p>
-    </div>
-    <div>
-      <small>${t("simpleStrategy")}</small>
-      <p>${isDownside ? t("downsideStrategy", { ticker: opportunity.ticker, risk: scan.crowding }) : t("opportunityStrategy", { ticker: opportunity.ticker, score: scan.impulse })}</p>
-    </div>
-    <div>
-      <small>${t("invalidation")}</small>
-      <p>${isDownside ? t("downsideRisk") : t("opportunityRisk", { trigger: triggerLabel(currentNarrative().trigger) })}</p>
-    </div>
     <section class="opportunity-rank">
       <small>${t("opportunityRank")}</small>
       ${rankedOpportunities()

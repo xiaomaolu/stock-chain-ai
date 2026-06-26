@@ -89,12 +89,52 @@ p {
 }
 
 .control-card,
-.note-card {
+.note-card,
+.source-legend {
   padding: 13px;
   border: 1px solid var(--line);
   background: var(--surface);
   display: grid;
   gap: 14px;
+}
+
+.source-legend {
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 10px;
+}
+
+.source-legend div {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 30px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface-3);
+}
+
+.source-legend i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.live-dot {
+  background: var(--green);
+  box-shadow: 0 0 0 4px rgba(15, 159, 110, 0.1);
+}
+
+.demo-dot {
+  background: var(--amber);
+  box-shadow: 0 0 0 4px rgba(183, 122, 20, 0.1);
+}
+
+.source-legend span {
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 900;
 }
 
 .label,
@@ -208,6 +248,35 @@ input[type="search"] {
 .product-insight strong {
   color: var(--text);
   font-size: 15px;
+}
+
+.insight-ticker {
+  display: flex !important;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.insight-ticker strong {
+  color: var(--text);
+  font-size: 20px;
+}
+
+.insight-ticker b {
+  color: var(--text);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.chain-row.compact {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chain-row.compact b {
+  color: var(--text);
+  font-size: 12px;
 }
 
 .data-status {
@@ -344,10 +413,10 @@ button:hover {
 }
 
 .hero h2 {
-  max-width: 680px;
+  max-width: 520px;
   margin-top: 5px;
-  font-size: clamp(28px, 2.7vw, 38px);
-  line-height: 1.04;
+  font-size: clamp(30px, 3.4vw, 48px);
+  line-height: 0.98;
   letter-spacing: 0;
 }
 
@@ -360,12 +429,14 @@ button:hover {
 }
 
 .mode-banner {
-  max-width: 760px;
-  display: grid;
-  gap: 4px;
-  padding: 10px 12px;
+  width: fit-content;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 10px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 999px;
   background: #ffffff;
 }
 
@@ -376,8 +447,9 @@ button:hover {
 
 .mode-banner span {
   color: var(--muted);
-  font-size: 13px;
-  line-height: 1.4;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 850;
 }
 
 .mode-banner.demo {
@@ -463,29 +535,110 @@ button:hover {
   font-weight: 800;
 }
 
-.stock-brief p {
-  color: #4f4563;
-  line-height: 1.4;
-  font-size: 13px;
-  overflow-wrap: anywhere;
+.stock-visual-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
 }
 
 .stock-brief-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+  justify-items: end;
+  text-align: right;
 }
 
 .stock-brief-head strong {
   color: #6d5dfc;
-  font-size: 26px;
+  font-size: 34px;
+  line-height: 0.95;
 }
 
 .stock-brief-head em {
   color: var(--text);
   font-style: normal;
   font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+.signal-dial {
+  --dial-color: #6d5dfc;
+  width: 92px;
+  aspect-ratio: 1;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at center, #ffffff 0 54%, transparent 55%),
+    conic-gradient(var(--dial-color) calc(var(--score) * 1%), #e4ddf5 0);
+  box-shadow: inset 0 0 0 1px var(--line), 0 12px 28px rgba(76, 42, 148, 0.12);
+  position: relative;
+}
+
+.signal-dial.long {
+  --dial-color: var(--green);
+}
+
+.signal-dial.short {
+  --dial-color: var(--red);
+}
+
+.signal-dial.neutral {
+  --dial-color: var(--amber);
+}
+
+.signal-dial b {
+  color: var(--text);
+  font-size: 26px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.signal-dial span {
+  position: absolute;
+  bottom: 23px;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.mini-bars,
+.decision-bars {
+  display: grid;
+  gap: 7px;
+}
+
+.mini-bars div,
+.decision-bars div {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) 34px;
+  align-items: center;
+  gap: 8px;
+}
+
+.mini-bars span,
+.decision-bars span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.mini-bars i,
+.decision-bars i {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #6d5dfc calc(var(--value) * 1%), #e4ddf5 0);
+}
+
+.mini-bars b,
+.decision-bars b {
+  color: var(--text);
+  font-size: 12px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 .stock-brief-grid {
@@ -1094,6 +1247,7 @@ canvas {
   background: transparent;
   text-align: left;
   font-weight: 950;
+  font-size: 34px;
 }
 
 .opportunity-target:hover {
@@ -1126,6 +1280,51 @@ canvas {
   border: 1px solid var(--line);
   border-radius: 7px;
   background: rgba(255, 255, 255, 0.72);
+}
+
+.opportunity-hero {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px !important;
+  align-items: center;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.opportunity-hero .signal-dial {
+  grid-row: span 2;
+  width: 86px;
+  padding: 0;
+  border: 0;
+  background:
+    radial-gradient(circle at center, #ffffff 0 54%, transparent 55%),
+    conic-gradient(var(--dial-color) calc(var(--score) * 1%), #e4ddf5 0);
+}
+
+.empty-visual {
+  display: grid !important;
+  grid-template-columns: 56px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px !important;
+  min-height: 70px;
+}
+
+.empty-visual b {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #f3efff;
+  color: #6d5dfc;
+  font-size: 15px;
+}
+
+.empty-visual span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 850;
 }
 
 .trade-ticket {

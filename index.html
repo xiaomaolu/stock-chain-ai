@@ -66,24 +66,17 @@
           <button id="resetBtn" class="ghost" data-i18n="reset">Reset</button>
         </div>
 
-        <section class="note-card">
-          <span class="label" data-i18n="demoBoundary">Demo boundary</span>
-          <p data-i18n="demoBoundaryBody">BTCUSDT/ETHUSDT can use live Bitget data. US-stock chain analysis is a demo unless Bitget lists that symbol.</p>
+        <section class="source-legend" aria-label="Data source">
+          <div><i class="live-dot"></i><span>Bitget</span></div>
+          <div><i class="demo-dot"></i><span>Demo</span></div>
         </section>
       </aside>
 
       <main class="workspace">
         <header class="hero">
           <div class="hero-main">
-            <p class="eyebrow" data-i18n="heroEyebrow">US Stock AI Trading</p>
             <h2 data-i18n="heroTitle">Find where a market story is early, crowded, fading, or mispriced.</h2>
-            <p class="hero-subtitle" data-i18n="heroSubtitle">Search a stock, see its industry chain, check price action, and get a simple AI trading idea.</p>
             <div id="modeBanner" class="mode-banner"></div>
-            <div class="flow-strip">
-              <div><b>1</b><span data-i18n="flowSearch">Search stock</span></div>
-              <div><b>2</b><span data-i18n="flowChain">Map chain</span></div>
-              <div><b>3</b><span data-i18n="flowOpportunity">Get AI setup</span></div>
-            </div>
             <div class="status-strip">
               <div><span data-i18n="stage">Stage</span><strong id="stageStatus">Unscanned</strong></div>
               <div><span data-i18n="pricedIn">Heat level</span><strong id="pricedInStatus">--</strong></div>
@@ -158,7 +151,7 @@
             <div class="basket-list" id="basketList"></div>
             <div class="thesis-box">
               <span data-i18n="arbitrageThesis">Plain idea</span>
-              <p id="tradeThesis">Click Analyze to get a simple trade idea.</p>
+              <p id="tradeThesis">Awaiting scan.</p>
             </div>
           </article>
         </section>
