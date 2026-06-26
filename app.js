@@ -101,6 +101,75 @@ const narratives = {
   },
 };
 
+const graphEnhancements = {
+  aiCapex: {
+    nodes: [
+      { ticker: "TSM", role: "Foundry partner", price: 172.6, heat: 79, lag: 12, side: "LONG", weight: 3.0 },
+      { ticker: "ASML", role: "Wafer equipment", price: 964.3, heat: 64, lag: 24, side: "LONG", weight: 2.1 },
+      { ticker: "MU", role: "Memory supplier", price: 131.4, heat: 61, lag: 27, side: "LONG", weight: 2.0 },
+      { ticker: "ANET", role: "Network supplier", price: 84.7, heat: 56, lag: 33, side: "LONG", weight: 1.9 },
+      { ticker: "ETN", role: "Power supplier", price: 314.2, heat: 54, lag: 36, side: "LONG", weight: 1.7 },
+      { ticker: "MSFT", role: "Cloud buyer", price: 441.3, heat: 76, lag: 4, side: "LONG", weight: 2.4 },
+      { ticker: "AMD", role: "GPU challenger", price: 164.8, heat: 63, lag: 22, side: "LONG", weight: 2.0 },
+      { ticker: "PLTR", role: "AI software", price: 25.8, heat: 47, lag: -6, side: "SHORT", weight: -1.2 },
+      { ticker: "SMCI", role: "Server supplier", price: 847.5, heat: 49, lag: 40, side: "LONG", weight: 1.5 },
+      { ticker: "XLK", role: "ETF hedge", price: 226.7, heat: 66, lag: -4, side: "SHORT", weight: -1.3 },
+    ],
+    positions: {
+      NVDA: [10, 28],
+      AVGO: [21, 40],
+      AMD: [23, 23],
+      TSM: [34, 28],
+      ASML: [33, 58],
+      MU: [45, 36],
+      ANET: [47, 61],
+      VRT: [58, 28],
+      ETN: [60, 54],
+      DELL: [72, 33],
+      SMCI: [72, 62],
+      MSFT: [84, 25],
+      SNOW: [84, 52],
+      MDB: [92, 65],
+      PLTR: [92, 39],
+      XLK: [52, 82],
+    },
+    edges: [
+      ["ASML", "TSM", "supply"],
+      ["TSM", "NVDA", "fabrication"],
+      ["TSM", "AVGO", "fabrication"],
+      ["TSM", "AMD", "fabrication"],
+      ["MU", "NVDA", "memory"],
+      ["ANET", "NVDA", "network"],
+      ["VRT", "MSFT", "power"],
+      ["ETN", "MSFT", "power"],
+      ["NVDA", "DELL", "gpu"],
+      ["NVDA", "SMCI", "gpu"],
+      ["AVGO", "ANET", "network"],
+      ["DELL", "MSFT", "servers"],
+      ["SMCI", "MSFT", "servers"],
+      ["MSFT", "SNOW", "budget"],
+      ["MSFT", "MDB", "budget"],
+      ["MSFT", "PLTR", "software"],
+      ["XLK", "NVDA", "hedge"],
+      ["XLK", "MSFT", "hedge"],
+    ],
+  },
+};
+
+Object.entries(graphEnhancements).forEach(([key, enhancement]) => {
+  const narrative = narratives[key];
+  if (!narrative) return;
+  const existing = new Set(narrative.nodes.map((node) => node.ticker));
+  enhancement.nodes.forEach((node) => {
+    if (!existing.has(node.ticker)) narrative.nodes.push(node);
+  });
+  narrative.nodes.forEach((node) => {
+    const position = enhancement.positions[node.ticker];
+    if (position) node.graph = { x: position[0], y: position[1] };
+  });
+  narrative.edges = enhancement.edges;
+});
+
 const state = {
   narrative: "aiCapex",
   style: "balanced",
@@ -152,6 +221,16 @@ const productProfiles = {
 const productAliases = {
   NVDA: ["nvidia", "英伟达", "辉达", "黄仁勋"],
   AVGO: ["broadcom", "博通"],
+  AMD: ["advanced micro devices", "超威"],
+  TSM: ["tsmc", "台积电"],
+  ASML: ["阿斯麦", "lithography"],
+  MU: ["micron", "美光"],
+  ANET: ["arista", "网络交换"],
+  ETN: ["eaton", "伊顿", "电力"],
+  MSFT: ["microsoft", "微软"],
+  SMCI: ["super micro", "超微电脑"],
+  PLTR: ["palantir"],
+  XLK: ["technology etf", "科技etf"],
   VRT: ["vertiv", "维谛", "电力散热"],
   DELL: ["dell", "戴尔"],
   SNOW: ["snowflake", "雪花"],
@@ -473,6 +552,14 @@ const translations = {
     roleNavalLaggard: "Naval",
     roleCrowdingHedge: "Crowding hedge",
     roleMarketHedge: "Market hedge",
+    roleFoundryPartner: "Foundry",
+    roleWaferEquipment: "Equipment",
+    roleMemorySupplier: "Memory",
+    roleNetworkSupplier: "Network",
+    roleCloudBuyer: "Cloud buyer",
+    roleGpuChallenger: "GPU challenger",
+    roleAiSoftware: "AI software",
+    roleEtfHedge: "ETF hedge",
   },
   zh: {
     brandSubtitle: "美股 AI 交易助手",
@@ -770,6 +857,14 @@ const translations = {
     roleNavalLaggard: "船舶供应",
     roleCrowdingHedge: "过热保护",
     roleMarketHedge: "市场对冲",
+    roleFoundryPartner: "晶圆代工",
+    roleWaferEquipment: "晶圆设备",
+    roleMemorySupplier: "存储供应",
+    roleNetworkSupplier: "网络供应",
+    roleCloudBuyer: "云买方",
+    roleGpuChallenger: "GPU 追赶",
+    roleAiSoftware: "AI 软件",
+    roleEtfHedge: "ETF 对冲",
   },
 };
 
@@ -801,13 +896,17 @@ function currentNarrative() {
 
 function productUniverse() {
   return Object.entries(narratives).flatMap(([narrativeKey, narrative]) =>
-    narrative.nodes.map((node) => ({
-      ...node,
-      narrativeKey,
-      narrativeTitle: narrative.title,
-      upstream: narrative.nodes.filter((item) => item.side === "LONG").slice(0, 3).map((item) => item.ticker),
-      downstream: narrative.nodes.filter((item) => item.side === "SHORT").slice(0, 3).map((item) => item.ticker),
-    }))
+    narrative.nodes.map((node) => {
+      const incoming = (narrative.edges || []).filter((edge) => edge[1] === node.ticker).map((edge) => edge[0]);
+      const outgoing = (narrative.edges || []).filter((edge) => edge[0] === node.ticker).map((edge) => edge[1]);
+      return {
+        ...node,
+        narrativeKey,
+        narrativeTitle: narrative.title,
+        upstream: incoming.length ? incoming : narrative.nodes.filter((item) => item.side === "LONG").slice(0, 3).map((item) => item.ticker),
+        downstream: outgoing.length ? outgoing : narrative.nodes.filter((item) => item.side === "SHORT").slice(0, 3).map((item) => item.ticker),
+      };
+    })
   );
 }
 
@@ -1277,10 +1376,40 @@ function renderPropagation() {
     ? `${product.ticker} · ${roleLabel(product.role)} · ${product.upstream.length + product.downstream.length} ${state.lang === "zh" ? "关联" : "links"}`
     : "--";
 
-  $("propagationMap").innerHTML = narrative.nodes
+  const positionFor = (node, index) => {
+    if (node.graph) return node.graph;
+    return {
+      x: 10 + index * 15 + (index % 2) * 6,
+      y: clamp(50 - node.heat * 0.32 + (index % 3) * 11, 8, 82),
+    };
+  };
+  const edgeSvg = (narrative.edges || []).length
+    ? `
+      <svg class="map-edge-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <marker id="edgeArrow" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+            <path d="M0,0 L5,2.5 L0,5 Z"></path>
+          </marker>
+        </defs>
+        ${(narrative.edges || [])
+          .map(([from, to, type]) => {
+            const fromNode = narrative.nodes.find((node) => node.ticker === from);
+            const toNode = narrative.nodes.find((node) => node.ticker === to);
+            if (!fromNode || !toNode) return "";
+            const a = positionFor(fromNode, narrative.nodes.indexOf(fromNode));
+            const b = positionFor(toNode, narrative.nodes.indexOf(toNode));
+            const tone = type === "hedge" || type === "budget" || type === "software" ? "risk" : "supply";
+            return `<path class="map-edge ${tone}" d="M ${a.x} ${a.y} C ${(a.x + b.x) / 2} ${a.y}, ${(a.x + b.x) / 2} ${b.y}, ${b.x} ${b.y}" marker-end="url(#edgeArrow)"></path>`;
+          })
+          .join("")}
+      </svg>
+    `
+    : "";
+  $("propagationMap").innerHTML = edgeSvg + narrative.nodes
     .map((node, index) => {
-      const x = 10 + index * 15 + (index % 2) * 6;
-      const y = 50 - node.heat * 0.32 + (index % 3) * 11;
+      const point = positionFor(node, index);
+      const x = point.x;
+      const y = point.y;
       const size = 46 + node.heat * 0.16;
       const tone = node.side === "LONG" ? "long" : "short";
       const selected = state.selectedProduct === node.ticker ? "selected" : "";
