@@ -1272,16 +1272,10 @@ function renderPropagation() {
   $("crowdingScore").textContent = `${scan.crowding}/100`;
   $("breakTrigger").textContent = triggerLabel(narrative.trigger);
   $("mapSummary").textContent = product?.role === "Bitget symbol"
-    ? t("mapSummaryCustom", { ticker: product.ticker })
+    ? `${product.ticker} · ${t("bitgetLive")}`
     : product
-    ? t("mapSummary", {
-        ticker: product.ticker,
-        role: roleLabel(product.role),
-        theme: product.narrativeTitle,
-        upstream: product.upstream.join(", "),
-        downstream: product.downstream.join(", ") || "--",
-      })
-    : t("mapSummaryEmpty");
+    ? `${product.ticker} · ${roleLabel(product.role)} · ${product.upstream.length + product.downstream.length} ${state.lang === "zh" ? "关联" : "links"}`
+    : "--";
 
   $("propagationMap").innerHTML = narrative.nodes
     .map((node, index) => {

@@ -390,32 +390,32 @@ button:hover {
 }
 
 .workspace {
-  padding: 16px 24px 24px;
+  padding: 14px 20px 24px;
   display: grid;
-  gap: 10px;
+  gap: 14px;
   min-width: 0;
 }
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.46fr);
-  gap: 16px;
-  align-items: start;
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 10px;
+  grid-template-columns: 1fr;
+  align-items: center;
+  border-bottom: 0;
+  padding-bottom: 0;
 }
 
 .hero-main {
   display: grid;
-  align-content: start;
-  gap: 8px;
+  grid-template-columns: minmax(280px, 500px) auto minmax(360px, 1fr);
+  align-items: center;
+  gap: 14px;
   min-width: 0;
 }
 
 .hero h2 {
   max-width: 520px;
-  margin-top: 5px;
-  font-size: clamp(30px, 3.4vw, 48px);
+  margin: 0;
+  font-size: clamp(28px, 3vw, 44px);
   line-height: 0.98;
   letter-spacing: 0;
 }
@@ -512,13 +512,13 @@ button:hover {
 
 .status-strip {
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  max-width: 680px;
-  margin-top: 10px;
+  max-width: none;
+  margin-top: 0;
 }
 
 .stock-brief {
   min-height: 0;
-  padding: 14px;
+  padding: 12px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: linear-gradient(135deg, #ffffff 0%, #f3efff 100%);
@@ -617,6 +617,11 @@ button:hover {
   grid-template-columns: 42px minmax(0, 1fr) 34px;
   align-items: center;
   gap: 8px;
+}
+
+.plan-panel .stock-brief {
+  margin: 0 16px 12px;
+  box-shadow: none;
 }
 
 .mini-bars span,
@@ -749,7 +754,7 @@ button:hover {
 }
 
 .market-grid {
-  grid-template-columns: minmax(0, 1.55fr) minmax(330px, 0.8fr);
+  grid-template-columns: minmax(0, 1.42fr) minmax(360px, 0.88fr);
 }
 
 .agent-grid,
@@ -920,7 +925,7 @@ canvas {
 }
 
 .propagation-map {
-  height: 300px;
+  height: 270px;
   margin: 0 16px 8px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -1963,6 +1968,10 @@ canvas {
   .replay-grid,
   .event-grid,
   .bottom-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-main {
     grid-template-columns: 1fr;
   }
 
